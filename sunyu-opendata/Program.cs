@@ -16,11 +16,12 @@ namespace sunyu_opendata
 
             using (TDXService srv = new TDXService())
             {
-                //await srv.HandleDailyTimetable();
+                await srv.HandleDailyTimetable();
             }
             using (OpendataService srv = new OpendataService())
             {
                 await srv.GetJDocs();
+                //srv.Example();
             }
             Console.WriteLine("轉檔結束");
             Console.ReadLine();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
-
+using System.Text.RegularExpressions;
 using sunyu_opendata.Infrastructure;
 using sunyu_opendata.Models;
 namespace sunyu_opendata.Services
@@ -17,8 +17,18 @@ namespace sunyu_opendata.Services
     {
         protected string connectName = "EQC_NEW";
 
+        public string DocKeys
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["DocKeys"];
+            }
+        }
+
         public DefaultService()
         {
+            string strCov = Regex.Unescape("\u6700\u9AD8\u7406");
+            //Console.WriteLine(strCov);
         }
 
         public DefaultService(string connectName)

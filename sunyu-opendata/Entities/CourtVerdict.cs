@@ -23,6 +23,8 @@ namespace sunyu_opendata.Entities
 
         public string JTitle { get; set; }
 
+        public string JFull { get; set; }
+
         public DateTime CreateTime { get; set; }
 
         public int CreateUser { get; set; }

@@ -11,6 +11,8 @@ namespace sunyu_opendata.Entities
         [Key]
         public int ID { get; set; }
 
+        public string ListDate { get; set; }
+
         public string Attachments { get; set; }
 
         public string JFullX { get; set; }
