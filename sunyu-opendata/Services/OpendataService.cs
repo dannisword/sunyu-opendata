@@ -173,7 +173,7 @@ namespace sunyu_opendata.Services
                 }
                 db.CourtVerdicts.AddRange(cs);
                 var count = await db.SaveChangesAsync();
-                Console.WriteLine(count);
+                Console.WriteLine($"裁決書,寫入筆數{count}");
                 await this.Waring($"裁決書,寫入筆數{count}");
             }
         }
