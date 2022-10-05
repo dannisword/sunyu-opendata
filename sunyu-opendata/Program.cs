@@ -20,7 +20,7 @@ namespace sunyu_opendata
             }
             using (OpendataService srv = new OpendataService())
             {
-                //await srv.GetJDocs();
+                await srv.GetJDocs();
             }
             Console.WriteLine("轉檔結束");
            // Console.ReadLine();
