@@ -35,6 +35,7 @@ namespace sunyu_opendata.Services
                 foreach (var item in timetables.TrainDates)
                 {
                     var tmpDt = item.ToDateTime("yyyy-MM-dd");
+                    Console.WriteLine($"轉檔日期{tmpDt}");
                     if (tmpDt == null)
                     {
                         continue;
@@ -104,7 +105,38 @@ namespace sunyu_opendata.Services
             {
                 var url = "https://tdx.transportdata.tw/api/basic/v2/Rail/THSR/DailyTimetable/TrainDate/" + trainDate;
                 var dailys = await this.GetAsyncs<DailyTimetable>(url, token);
-
+                List<THSR> ts = new List<THSR>();
+                foreach(var daily in dailys)
+                {
+                    int length = daily.StopTimes.Count;
+                    foreach (var stop in daily.StopTimes)
+                    {
+                        var ends = daily.StopTimes.Where(p => p.StopSequence > stop.StopSequence);
+                        if (ends.Any())
+                        {
+                            foreach(var end in ends)
+                            {
+                                var t = new THSR()
+                                {
+                                    Direction = daily.DailyTrainInfo.Direction == 0 ? (byte)2 : daily.DailyTrainInfo.Direction,
+                                    CarNo = daily.DailyTrainInfo.TrainNo,
+                                    StartStationName = stop.StationName.Zh_tw,
+                                    DepartureTime = stop.DepartureTime,
+                                    EndingStationName = end.StationName.Zh_tw,
+                                    ArrivalTime = end.ArrivalTime,
+                                    Memo = daily.TrainDate,
+                                    CreateTime = DateTime.Now,
+                                    CreateUser = 0,
+                                    ModifyTime = DateTime.Now,
+                                    ModifyUser = 0,
+                                };
+                                ts.Add(t);
+                            }
+                        }
+                    }
+                }
+                return ts;
+                /*
                 return dailys.Select(x => new THSR()
                 {
                     Direction = x.DailyTrainInfo.Direction == 0 ? (byte)2 : x.DailyTrainInfo.Direction,
@@ -119,6 +151,7 @@ namespace sunyu_opendata.Services
                     ModifyTime = DateTime.Now,
                     ModifyUser = 0,
                 });
+                */
             }
         }
 
@@ -126,7 +159,7 @@ namespace sunyu_opendata.Services
         {
             using (var context = new SQLContext(this.connectName))
             {
-
+                context.Database.ExecuteSqlCommand("DELETE FROM THSR");
                 int eCode = 0;
                 var q = from a in context.THSRs
                         where a.Memo == trainDate
