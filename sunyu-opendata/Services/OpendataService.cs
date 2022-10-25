@@ -49,7 +49,10 @@ namespace sunyu_opendata.Services
                         continue;
                     }
                     var jDoc = JsonSerializer.Deserialize<JDoc>(data);
-
+                    if (jDoc.JTITLE != "政府採購法")
+                    {
+                        continue;
+                    }
                     if (jDoc.JID != null)
                     {
                         using (var db = new SQLContext(this.connectName))
