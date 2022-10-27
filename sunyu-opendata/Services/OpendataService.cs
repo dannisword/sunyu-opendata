@@ -16,6 +16,7 @@ namespace sunyu_opendata.Services
         {
             try
             {
+                Success("裁決書轉檔開始");
                 var token = this.getToken();
                 // JList 
                 var url = "https://data.judicial.gov.tw/jdg/api/JList";
@@ -49,10 +50,7 @@ namespace sunyu_opendata.Services
                         continue;
                     }
                     var jDoc = JsonSerializer.Deserialize<JDoc>(data);
-                    if (jDoc.JTITLE != "政府採購法")
-                    {
-                        continue;
-                    }
+
                     if (jDoc.JID != null)
                     {
                         using (var db = new SQLContext(this.connectName))
@@ -81,6 +79,7 @@ namespace sunyu_opendata.Services
                 }
                 // 轉換 違反政府採購法
                 this.setCourtVerdict(jList[0].date);
+                Success("裁決書轉檔完成");
             }
             catch (System.Text.Json.JsonException ex)
             {
@@ -150,7 +149,7 @@ namespace sunyu_opendata.Services
             {
                 var q = from a in db.JDocs
                         where a.ListDate == listDate &&
-                              a.JTitle == "政府採購法"
+                              a.JTitle.Contains("採購")
                         select a;
                 var cs = new List<CourtVerdict>();
 
@@ -175,8 +174,8 @@ namespace sunyu_opendata.Services
                     cs.Add(c);
                 }
                 db.CourtVerdicts.AddRange(cs);
-                var count = await db.SaveChangesAsync();
-                Console.WriteLine($"裁決書,寫入筆數{count}");
+                var count = db.SaveChanges();
+                Console.WriteLine(count);
                 await this.Waring($"裁決書,寫入筆數{count}");
             }
         }

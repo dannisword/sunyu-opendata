@@ -77,7 +77,6 @@ C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\bin\Debug\System.Text.Encoding
 C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\bin\Debug\System.Text.Json.xml
 C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\bin\Debug\System.ValueTuple.xml
-C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\obj\Debug\sunyu-opendata.csproj.AssemblyReference.cache
 C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\obj\Debug\sunyu-opendata.csproj.CoreCompileInputs.cache
 C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\obj\Debug\sunyu-opendata.csproj.CopyComplete
 C:\Repositories\tmp\sunyu-opendata\sunyu-opendata\obj\Debug\sunyu-opendata.exe
