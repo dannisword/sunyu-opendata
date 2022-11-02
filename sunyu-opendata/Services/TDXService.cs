@@ -97,31 +97,46 @@ namespace sunyu_opendata.Services
                 }
             }
         }
-        
+
         private async Task<IEnumerable<THSR>> getDailyTimetable(string token, string trainDate)
         {
             using (HttpClient client = new HttpClient())
             {
                 var url = "https://tdx.transportdata.tw/api/basic/v2/Rail/THSR/DailyTimetable/TrainDate/" + trainDate;
                 var dailys = await this.GetAsyncs<DailyTimetable>(url, token);
-
-                return dailys.Select(x => new THSR()
+                List<THSR> ts = new List<THSR>();
+                foreach (var daily in dailys)
                 {
-                    Direction = x.DailyTrainInfo.Direction == 0 ? (byte)2 : x.DailyTrainInfo.Direction,
-                    CarNo = x.DailyTrainInfo.TrainNo,
-                    StartStationName = x.DailyTrainInfo.StartingStationName.Zh_tw,
-                    DepartureTime = x.StopTimes.First().DepartureTime,
-                    EndingStationName = x.DailyTrainInfo.EndingStationName.Zh_tw,
-                    ArrivalTime = x.StopTimes.Last().ArrivalTime,
-                    Memo = x.TrainDate,
-                    CreateTime = DateTime.Now,
-                    CreateUser = 0,
-                    ModifyTime = DateTime.Now,
-                    ModifyUser = 0,
-                });
+                    int length = daily.StopTimes.Count;
+                    foreach (var stop in daily.StopTimes)
+                    {
+                        var ends = daily.StopTimes.Where(p => p.StopSequence > stop.StopSequence);
+                        if (ends.Any())
+                        {
+                            foreach (var end in ends)
+                            {
+                                var t = new THSR()
+                                {
+                                    Direction = daily.DailyTrainInfo.Direction == 0 ? (byte)2 : daily.DailyTrainInfo.Direction,
+                                    CarNo = daily.DailyTrainInfo.TrainNo,
+                                    StartStationName = stop.StationName.Zh_tw,
+                                    DepartureTime = stop.DepartureTime,
+                                    EndingStationName = end.StationName.Zh_tw,
+                                    ArrivalTime = end.ArrivalTime,
+                                    Memo = daily.TrainDate,
+                                    CreateTime = DateTime.Now,
+                                    CreateUser = 0,
+                                    ModifyTime = DateTime.Now,
+                                    ModifyUser = 0,
+                                };
+                                ts.Add(t);
+                            }
+                        }
+                    }
+                }
+                return ts;
             }
         }
-
         private bool setTHSRs(IEnumerable<THSR> records, string trainDate)
         {
             using (var context = new SQLContext(this.connectName))
