@@ -16,7 +16,7 @@ namespace sunyu_opendata
 
             using (TDXService srv = new TDXService())
             {
-                //await srv.HandleDailyTimetable();
+                await srv.HandleDailyTimetable();
             }
             using (OpendataService srv = new OpendataService())
             {
